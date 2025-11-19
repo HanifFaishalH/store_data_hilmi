@@ -7,20 +7,8 @@ Absen 15
 ---
 # Codelabs 13: Persistensi Data
 ---
-## Praktikum 1: Konversi Dart model ke JSON
+## Praktikum 2: Handle kompatibilitas data JSON
 
-### Soal 1
-- Tambahkan nama panggilan Anda pada title app sebagai identitas hasil pekerjaan Anda.
-- Gantilah warna tema aplikasi sesuai kesukaan Anda.
-
-  ![p1_s1.png](assets/praktikum1/p1_s1.png)
-
-### Soal 2
-- Masukkan hasil capture layar ke laporan praktikum Anda.
-
-![p1_s2.png](assets/praktikum1/p1_s2.png)
-
-### Soal 3
-- Masukkan hasil capture layar ke laporan praktikum Anda.
-
-![p1_s3.png](assets/praktikum1/p1_s3.png)
+### Soal 4
+Capture hasil running aplikasi Anda, kemudian impor ke laporan praktikum Anda!
+![p2_s4.png](assets/praktikum2/p2_s4.png)

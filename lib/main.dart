@@ -1,6 +1,5 @@
 import 'dart:convert';
 import './model/pizza.dart';
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -40,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<Pizza>> readJsonFile() async {
     String myString = await DefaultAssetBundle.of(context)
-        .loadString('assets/pizzalist.json');
+        .loadString('assets/pizzalist_broken.json');
     List pizzaMapList = jsonDecode(myString);
 
     setState(() {
@@ -51,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     String json = convertToJson(myPizzas);
     print(json);
-
     return myPizzas;
   }
 
@@ -78,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(myPizzas[index].pizzaName),
-            subtitle: Text(myPizzas[index].description),
+            subtitle: Text('${myPizzas[index].description}\n€ ${myPizzas[index].price}'),
           );
         },
       )
