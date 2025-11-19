@@ -1,16 +1,26 @@
-# store_data_hilmi
+Hanif Faishal Hilmi
 
-A new Flutter project.
+TI-3F
 
-## Getting Started
+Absen 15
 
-This project is a starting point for a Flutter application.
+---
+# Codelabs 13: Persistensi Data
+---
+## Praktikum 1: Konversi Dart model ke JSON
 
-A few resources to get you started if this is your first Flutter project:
+### Soal 1
+- Tambahkan nama panggilan Anda pada title app sebagai identitas hasil pekerjaan Anda.
+- Gantilah warna tema aplikasi sesuai kesukaan Anda.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+  ![p1_s1.png](assets/praktikum1/p1_s1.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Soal 2
+- Masukkan hasil capture layar ke laporan praktikum Anda.
+
+![p1_s2.png](assets/praktikum1/p1_s2.png)
+
+### Soal 3
+- Masukkan hasil capture layar ke laporan praktikum Anda.
+
+![p1_s3.png](assets/praktikum1/p1_s3.png)
