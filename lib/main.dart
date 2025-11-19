@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import './model/pizza.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter JSON Demo',
-      theme: ThemeData(
-        primaryColor: Colors.cyan
-      ),
+      theme: ThemeData(primaryColor: Colors.cyan),
       home: const MyHomePage(),
     );
   }
@@ -29,57 +28,61 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String pizzaString = '';
-  List<Pizza> myPizzas = [];
-  String convertToJson(List<Pizza> pizzas) {
-    return jsonEncode(pizzas.map((pizzas) => jsonEncode(pizzas))
-    .toList());
+  int appCounter = 0;
+
+  // -----------------------------
+  //   PRAKTIKUM 4: SHARED PREF
+  // -----------------------------
+  Future<void> readAndWritePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int appCounter = prefs.getInt('appCounter') ?? 0;
+
+    // Increment
+    appCounter++;
+
+    await prefs.setInt('appCounter', appCounter);
+    setState(() {
+      appCounter = appCounter;
+    });
   }
 
-
-  Future<List<Pizza>> readJsonFile() async {
-    String myString = await DefaultAssetBundle.of(context)
-        .loadString('assets/pizzalist_broken.json');
-    List pizzaMapList = jsonDecode(myString);
+  Future<void> deletePreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('appCounter');
 
     setState(() {
-      for (var pizza in pizzaMapList) {
-        Pizza myPizza = Pizza.fromJson(pizza);
-        myPizzas.add(myPizza);
-      }
+      appCounter = 0;
     });
-    String json = convertToJson(myPizzas);
-    print(json);
-    return myPizzas;
   }
 
   @override
   void initState() {
     super.initState();
-    readJsonFile()
-      .then((value) {
-        setState(() {
-          myPizzas = value;
-        });
-    });
+    readAndWritePreference();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('JSON'),
       ),
-      body: ListView.builder(
-        itemCount: myPizzas.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(myPizzas[index].pizzaName),
-            subtitle: Text('${myPizzas[index].description}\n€ ${myPizzas[index].price}'),
-          );
-        },
-      )
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'You have opened the app $appCounter times.',
+              style: const TextStyle(fontSize: 20),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: deletePreferences,
+              child: const Text('Reset Counter'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
