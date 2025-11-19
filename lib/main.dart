@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './model/pizza.dart';
@@ -30,52 +31,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int appCounter = 0;
   String documentsPath = '';
   String tempPath = '';
-  late File myFile;
-  String fileText='';
 
-  //   PRAKTIKUM 4: SHARED PREF
-  // Future<void> readAndWritePreference() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   int appCounter = prefs.getInt('appCounter') ?? 0;
-  //
-  //   // Increment
-  //   appCounter++;
-  //
-  //   await prefs.setInt('appCounter', appCounter);
-  //   setState(() {
-  //     appCounter = appCounter;
-  //   });
-  // }
-  //
-  // Future<void> deletePreferences() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.remove('appCounter');
-  //
-  //   setState(() {
-  //     appCounter = 0;
-  //   });
-  // }
+  late File myFile;
+  String fileText = '';
+
+  final pwdController = TextEditingController();
+  String myPass = '';
+
+  final storage = const FlutterSecureStorage();
+  final myKey = 'myPass';
 
   // PRAKTIKUM 5
   Future<void> getPaths() async {
-    // jeda sedikit agar emulator siap
     await Future.delayed(const Duration(milliseconds: 300));
 
     final docDir = await getApplicationDocumentsDirectory();
     final tempDir = await getTemporaryDirectory();
-
-    print("DOC: ${docDir.path}");
-    print("TEMP: ${tempDir.path}");
 
     setState(() {
       documentsPath = docDir.path;
       tempPath = tempDir.path;
     });
   }
-  
+
   // PRAKTIKUM 6
   Future<bool> writeFile() async {
     try {
@@ -98,6 +78,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  // PRAKTIKUM 7
+  Future writeToSecureStorage() async {
+    await storage.write(key: myKey, value: pwdController.text);
+  }
+
+  Future<String> readFromSecureStorage() async {
+    String secret = await storage.read(key: myKey) ?? '';
+    return secret;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -117,13 +107,30 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Doc path: $documentsPath'),
-            Text('Temp path: $tempPath'),
+            TextField(controller: pwdController),
+
+            const SizedBox(height: 15),
+
             ElevatedButton(
-              onPressed: () => readFile(),
-              child: const Text('Read File'),
+              onPressed: () async {
+                await writeToSecureStorage();
+              },
+              child: const Text('Save Value'),
             ),
-            Text(fileText)
+
+            ElevatedButton(
+              onPressed: () async {
+                String value = await readFromSecureStorage();
+                setState(() {
+                  myPass = value;
+                });
+              },
+              child: const Text('Read Value'),
+            ),
+            Text(
+              myPass,
+              style: const TextStyle(fontSize: 20),
+            ),
           ],
         ),
       ),

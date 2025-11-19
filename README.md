@@ -7,11 +7,9 @@ Absen 15
 ---
 # Codelabs 13: Persistensi Data
 ---
-## Praktikum 6: Akses filesystem dengan direktori
+## Praktikum 7: Menyimpan data dengan enkripsi/dekripsi
 
-### Soal 8
-- Jelaskan maksud kode pada langkah 3 dan 7 !
-    - langkah 3: fungsi asynchronous yang bertugas menuliskan data ke dalam sebuah file di memori perangkat.
-    - langkah 7: menampilkan document dan temporary path, dan button Read File. Jika button ini ditekan, fungsi readfile akan dijalankan dan menampilkan list pizza.
+### Soal 9
+
 - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
-![p6_s8.gif](assets/praktikum6/p6_s8.gif)
+![p7_s9.gif](assets/praktikum7/p7_s9.gif)
