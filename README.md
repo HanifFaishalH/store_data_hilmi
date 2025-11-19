@@ -7,9 +7,8 @@ Absen 15
 ---
 # Codelabs 13: Persistensi Data
 ---
-## Praktikum 4: SharedPreferences
+## Praktikum 5: Akses filesystem dengan path_provider
 
-### Soal 6
+### Soal 7
 - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
-![p4_s6.png](assets/praktikum4/p4_s6.png)
-![praktikum4_s16.gif](assets/praktikum4/praktikum4_s16.gif)
+![p5_s7.png](assets/praktikum5/p5_s7.png)

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './model/pizza.dart';
 import 'package:flutter/material.dart';
@@ -29,57 +30,68 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int appCounter = 0;
+  String documentsPath = '';
+  String tempPath = '';
 
-  // -----------------------------
   //   PRAKTIKUM 4: SHARED PREF
-  // -----------------------------
-  Future<void> readAndWritePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int appCounter = prefs.getInt('appCounter') ?? 0;
+  // Future<void> readAndWritePreference() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   int appCounter = prefs.getInt('appCounter') ?? 0;
+  //
+  //   // Increment
+  //   appCounter++;
+  //
+  //   await prefs.setInt('appCounter', appCounter);
+  //   setState(() {
+  //     appCounter = appCounter;
+  //   });
+  // }
+  //
+  // Future<void> deletePreferences() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.remove('appCounter');
+  //
+  //   setState(() {
+  //     appCounter = 0;
+  //   });
+  // }
 
-    // Increment
-    appCounter++;
+  // PRAKTIKUM 5
+  Future<void> getPaths() async {
+    // jeda sedikit agar emulator siap
+    await Future.delayed(const Duration(milliseconds: 300));
 
-    await prefs.setInt('appCounter', appCounter);
+    final docDir = await getApplicationDocumentsDirectory();
+    final tempDir = await getTemporaryDirectory();
+
+    print("DOC: ${docDir.path}");
+    print("TEMP: ${tempDir.path}");
+
     setState(() {
-      appCounter = appCounter;
-    });
-  }
-
-  Future<void> deletePreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('appCounter');
-
-    setState(() {
-      appCounter = 0;
+      documentsPath = docDir.path;
+      tempPath = tempDir.path;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    readAndWritePreference();
+    // readAndWritePreference();
+    getPaths();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('JSON'),
+        title: const Text('Path Provider'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'You have opened the app $appCounter times.',
-              style: const TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: deletePreferences,
-              child: const Text('Reset Counter'),
-            ),
+            Text('Doc path: $documentsPath'),
+            Text('Temp path: $tempPath'),
           ],
         ),
       ),
