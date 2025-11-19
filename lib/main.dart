@@ -32,17 +32,26 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String pizzaString = '';
   List<Pizza> myPizzas = [];
+  String convertToJson(List<Pizza> pizzas) {
+    return jsonEncode(pizzas.map((pizzas) => jsonEncode(pizzas))
+    .toList());
+  }
+
 
   Future<List<Pizza>> readJsonFile() async {
     String myString = await DefaultAssetBundle.of(context)
         .loadString('assets/pizzalist.json');
     List pizzaMapList = jsonDecode(myString);
+
     setState(() {
       for (var pizza in pizzaMapList) {
         Pizza myPizza = Pizza.fromJson(pizza);
         myPizzas.add(myPizza);
       }
     });
+    String json = convertToJson(myPizzas);
+    print(json);
+
     return myPizzas;
   }
 
