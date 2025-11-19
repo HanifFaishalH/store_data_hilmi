@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './model/pizza.dart';
@@ -32,6 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int appCounter = 0;
   String documentsPath = '';
   String tempPath = '';
+  late File myFile;
+  String fileText='';
 
   //   PRAKTIKUM 4: SHARED PREF
   // Future<void> readAndWritePreference() async {
@@ -72,12 +75,36 @@ class _MyHomePageState extends State<MyHomePage> {
       tempPath = tempDir.path;
     });
   }
+  
+  // PRAKTIKUM 6
+  Future<bool> writeFile() async {
+    try {
+      await myFile.writeAsString('Margherita, Capricciosa, Napoli');
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> readFile() async {
+    try {
+      String fileContent = await myFile.readAsString();
+      setState(() {
+        fileText = fileContent;
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // readAndWritePreference();
-    getPaths();
+    getPaths().then((_) {
+      myFile = File('$documentsPath/pizzas.txt');
+      writeFile();
+    });
   }
 
   @override
@@ -92,6 +119,11 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Text('Doc path: $documentsPath'),
             Text('Temp path: $tempPath'),
+            ElevatedButton(
+              onPressed: () => readFile(),
+              child: const Text('Read File'),
+            ),
+            Text(fileText)
           ],
         ),
       ),
