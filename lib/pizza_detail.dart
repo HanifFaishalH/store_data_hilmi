@@ -3,23 +3,44 @@ import 'package:store_data_hilmi/httphelper.dart';
 import 'package:store_data_hilmi/model/pizza.dart';
 
 class PizzaDetailScreen extends StatefulWidget {
-  const PizzaDetailScreen({super.key});
+  final Pizza pizza;
+  final bool isNew;
+
+  const PizzaDetailScreen({
+    super.key,
+    required this.pizza,
+    required this.isNew,
+  });
 
   @override
   State<PizzaDetailScreen> createState() => _PizzaDetailScreenState();
 }
 
-final TextEditingController txtId = TextEditingController();
-final TextEditingController txtName = TextEditingController();
-final TextEditingController txtDescription = TextEditingController();
-final TextEditingController txtPrice = TextEditingController();
-final TextEditingController txtImageUrl = TextEditingController();
-final TextEditingController txtCategory = TextEditingController();
-final TextEditingController txtAvailable = TextEditingController();
+final txtId = TextEditingController();
+final txtName = TextEditingController();
+final txtDescription = TextEditingController();
+final txtPrice = TextEditingController();
+final txtImageUrl = TextEditingController();
+final txtCategory = TextEditingController();
+final txtAvailable = TextEditingController();
 
 String operationResult = '';
 
 class _PizzaDetailScreenState extends State<PizzaDetailScreen> {
+  @override
+  void initState() {
+    if (!widget.isNew) {
+      txtId.text = widget.pizza.id.toString();
+      txtName.text = widget.pizza.pizzaName;
+      txtDescription.text = widget.pizza.description;
+      txtPrice.text = widget.pizza.price.toString();
+      txtImageUrl.text = widget.pizza.imageUrl;
+      txtCategory.text = widget.pizza.category;
+      txtAvailable.text = widget.pizza.isAvailable.toString();
+    }
+    super.initState();
+  }
+
   @override
   void dispose() {
     txtId.dispose();
@@ -46,63 +67,23 @@ class _PizzaDetailScreenState extends State<PizzaDetailScreen> {
               Text(
                 operationResult,
                 style: TextStyle(
-                    backgroundColor: Colors.green[200],
-                    color: Colors.black),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextField(
-                controller: txtId,
-                decoration: const InputDecoration(hintText: 'Insert ID'),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextField(
-                controller: txtName,
-                decoration: const InputDecoration(hintText: 'Insert Pizza Name'),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextField(
-                controller: txtDescription,
-                decoration: const InputDecoration(hintText: 'Insert Description'),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextField(
-                controller: txtPrice,
-                decoration: const InputDecoration(hintText: 'Insert Price'),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextField(
-                controller: txtImageUrl,
-                decoration: const InputDecoration(hintText: 'Insert Image Url'),
+                  backgroundColor: Colors.green[200],
+                  color: Colors.black,
+                ),
               ),
               const SizedBox(height: 24),
-              TextField(
-                controller: txtCategory,
-                decoration: const InputDecoration(hintText: 'Insert Category'),
-              ),
-              const SizedBox(height: 24),
-              TextField(
-                controller: txtAvailable,
-                decoration: const InputDecoration(hintText: 'Is Available? (true/false)'),
-              ),
-              const SizedBox(
-                height: 48,
-              ),
-
+              _buildTextField(txtId, 'Insert ID'),
+              _buildTextField(txtName, 'Insert Pizza Name'),
+              _buildTextField(txtDescription, 'Insert Description'),
+              _buildTextField(txtPrice, 'Insert Price'),
+              _buildTextField(txtImageUrl, 'Insert Image URL'),
+              _buildTextField(txtCategory, 'Insert Category'),
+              _buildTextField(txtAvailable, 'Is Available? (true/false)'),
+              const SizedBox(height: 48),
               ElevatedButton(
-                  child: const Text('Send Post'),
-                  onPressed: () {
-                    postPizza();
-                  })
+                onPressed: savePizza,
+                child: Text(widget.isNew ? 'Add Pizza' : 'Update Pizza'),
+              ),
             ],
           ),
         ),
@@ -110,7 +91,17 @@ class _PizzaDetailScreenState extends State<PizzaDetailScreen> {
     );
   }
 
-  Future postPizza() async {
+  Widget _buildTextField(TextEditingController controller, String hint) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(hintText: hint),
+      ),
+    );
+  }
+
+  Future<void> savePizza() async {
     HttpHelper helper = HttpHelper();
     Pizza pizza = Pizza();
     pizza.id = int.tryParse(txtId.text) ?? 0;
@@ -121,10 +112,12 @@ class _PizzaDetailScreenState extends State<PizzaDetailScreen> {
     pizza.category = txtCategory.text;
     pizza.isAvailable = txtAvailable.text.toLowerCase() == 'true';
 
-    String result = await helper.postPizza(pizza);
+    final result = await (widget.isNew
+        ? helper.postPizza(pizza)
+        : helper.putPizza(pizza));
+
     setState(() {
       operationResult = result;
     });
   }
-
 }

@@ -7,13 +7,12 @@ Absen 15
 ---
 # Codelabs 14: RESTful API
 ---
-## Praktikum 2: Mengirim Data ke Web Service (POST)
+## Praktikum 3: Memperbarui Data di Web Service (PUT)
 
-### Soal 2
+### Soal 3
 
-- Tambahkan field baru dalam JSON maupun POST ke Wiremock!
-![pizza.png](assets/JS14/praktikum2/pizza.png)
-![pizza_detail.png](assets/JS14/praktikum2/pizza_detail.png)
-
-- Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 2 dengan pesan "W14: Jawaban Soal 2"
-![praktikum2.gif](assets/JS14/praktikum2/praktikum2.gif)
+- Ubah salah satu data dengan Nama dan NIM Anda, lalu perhatikan hasilnya di Wiremock. 
+![p3_s3.png](assets/JS14/praktikum3/p3_s3.png)
+![log_result.png](assets/JS14/praktikum3/log_result.png)
+- Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 3 dengan pesan "W14: Jawaban Soal 3"
+![praktikum3.gif](assets/JS14/praktikum3/praktikum3.gif)
