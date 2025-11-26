@@ -7,7 +7,7 @@ Absen 15
 ---
 # Codelabs 14: RESTful API
 ---
-## Praktikum 1: Membuat layanan Mock API
+## Praktikum 2: Mengirim Data ke Web Service (POST)
 
 ### Soal 2
 
