@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:store_data_hilmi/httphelper.dart';
 import './model/pizza.dart';
 import 'package:flutter/material.dart';
 
@@ -17,8 +16,32 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter JSON Demo',
-      theme: ThemeData(primaryColor: Colors.cyan),
+      theme: ThemeData(
+        // Warna utama aplikasi (AppBar, tombol utama, dsb.)
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.teal,
+          primary: Colors.teal,
+          secondary: Colors.orangeAccent,
+          brightness: Brightness.light,
+        ),
+        scaffoldBackgroundColor: Colors.grey[50], // background halaman
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.teal,
+          foregroundColor: Colors.white, // warna teks di AppBar
+          elevation: 4,
+          centerTitle: true,
+        ),
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(fontWeight: FontWeight.bold),
+          bodyMedium: TextStyle(color: Colors.black87, fontSize: 16),
+        ),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Colors.teal, // warna loading spinner
+        ),
+        useMaterial3: true,
+      ),
       home: const MyHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -88,6 +111,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return secret;
   }
 
+  // <--- JS 14 --->
+  // Praktikum 1
+  Future<List<Pizza>> callPizzas() async {
+    HttpHelper helper = HttpHelper();
+    List<Pizza> pizzas = await helper.getPizzaList();
+    return pizzas;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -100,39 +131,49 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Path Provider'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(controller: pwdController),
+      appBar: AppBar(title: const Text('🍕 API Hanif Faishal Hilmi')),
+      body: FutureBuilder(
+        future: callPizzas(),
+        builder: (BuildContext context, AsyncSnapshot<List<Pizza>> snapshot) {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text(
+                '❌ Something went wrong',
+                style: TextStyle(color: Colors.redAccent, fontSize: 18),
+              ),
+            );
+          }
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            const SizedBox(height: 15),
-
-            ElevatedButton(
-              onPressed: () async {
-                await writeToSecureStorage();
-              },
-              child: const Text('Save Value'),
-            ),
-
-            ElevatedButton(
-              onPressed: () async {
-                String value = await readFromSecureStorage();
-                setState(() {
-                  myPass = value;
-                });
-              },
-              child: const Text('Read Value'),
-            ),
-            Text(
-              myPass,
-              style: const TextStyle(fontSize: 20),
-            ),
-          ],
-        ),
+          return ListView.builder(
+            itemCount: snapshot.data?.length ?? 0,
+            itemBuilder: (BuildContext context, int position) {
+              final pizza = snapshot.data![position];
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                elevation: 3,
+                child: ListTile(
+                  leading: const Icon(Icons.local_pizza, color: Colors.teal),
+                  title: Text(
+                    pizza.pizzaName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal,
+                    ),
+                  ),
+                  subtitle: Text(
+                    '${pizza.description}\n€ ${pizza.price.toStringAsFixed(2)}',
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

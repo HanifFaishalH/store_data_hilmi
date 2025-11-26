@@ -5,11 +5,13 @@ TI-3F
 Absen 15
 
 ---
-# Codelabs 13: Persistensi Data
+# Codelabs 14: RESTful API
 ---
-## Praktikum 7: Menyimpan data dengan enkripsi/dekripsi
+## Praktikum 1: Membuat layanan Mock API
 
-### Soal 9
+### Soal 1
 
-- Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
-![p7_s9.gif](assets/praktikum7/p7_s9.gif)
+- Tambahkan nama panggilan Anda pada title app sebagai identitas hasil pekerjaan Anda.
+- Gantilah warna tema aplikasi sesuai kesukaan Anda. 
+- Capture hasil aplikasi Anda, lalu masukkan ke laporan di README dan lakukan commit hasil jawaban Soal 1 dengan pesan "W14: Jawaban Soal 1"
+![P1.png](assets/JS14/praktikum1/P1.png)
