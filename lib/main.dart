@@ -50,9 +50,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late Future<List<Pizza>> _pizzaListFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _pizzaListFuture = callPizzas();
+  }
+
   Future<List<Pizza>> callPizzas() async {
     HttpHelper helper = HttpHelper();
     return await helper.getPizzaList();
+  }
+
+  void _refreshList() {
+    setState(() {
+      _pizzaListFuture = callPizzas();
+    });
   }
 
   @override
@@ -60,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(title: const Text('🍕 API Hanif Faishal Hilmi')),
       body: FutureBuilder<List<Pizza>>(
-        future: callPizzas(),
+        future: _pizzaListFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -80,38 +94,69 @@ class _MyHomePageState extends State<MyHomePage> {
           final pizzas = snapshot.data!;
           return ListView.builder(
             itemCount: pizzas.length,
-            itemBuilder: (context, index) {
-              final pizza = pizzas[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            itemBuilder: (context, position) {
+              final pizza = pizzas[position];
+              return Dismissible(
+                key: Key(pizza.id.toString()),
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20),
+                  color: Colors.redAccent,
+                  child: const Icon(Icons.delete, color: Colors.white),
                 ),
-                elevation: 3,
-                child: ListTile(
-                  leading: const Icon(Icons.local_pizza, color: Colors.teal),
-                  title: Text(
-                    pizza.pizzaName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.teal,
-                    ),
-                  ),
-                  subtitle: Text(
-                    '${pizza.description}\n€ ${pizza.price.toStringAsFixed(2)}',
-                    style: const TextStyle(color: Colors.black54),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PizzaDetailScreen(
-                          pizza: pizza,
-                          isNew: false,
-                        ),
+                onDismissed: (direction) async {
+                  HttpHelper helper = HttpHelper();
+                  await helper.deletePizza(pizza.id);
+
+                  setState(() {
+                    pizzas.removeAt(position);
+                  });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '${pizza.pizzaName} deleted',
+                        style: const TextStyle(color: Colors.white),
                       ),
-                    );
-                  },
+                      backgroundColor: Colors.teal,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: Card(
+                  margin:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 3,
+                  child: ListTile(
+                    leading:
+                    const Icon(Icons.local_pizza, color: Colors.teal),
+                    title: Text(
+                      pizza.pizzaName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${pizza.description}\n€ ${pizza.price.toStringAsFixed(2)}',
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PizzaDetailScreen(
+                            pizza: pizza,
+                            isNew: false,
+                          ),
+                        ),
+                      ).then((_) => _refreshList());
+                    },
+                  ),
                 ),
               );
             },
@@ -128,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 isNew: true,
               ),
             ),
-          );
+          ).then((_) => _refreshList());
         },
         child: const Icon(Icons.add),
       ),
