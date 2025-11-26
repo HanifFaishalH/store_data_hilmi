@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:store_data_hilmi/httphelper.dart';
+import 'package:store_data_hilmi/pizza_detail.dart';
 import './model/pizza.dart';
 import 'package:flutter/material.dart';
 
@@ -174,6 +175,16 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const PizzaDetailScreen())
+            );
+          }
       ),
     );
   }

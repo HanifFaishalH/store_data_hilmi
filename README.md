@@ -9,9 +9,11 @@ Absen 15
 ---
 ## Praktikum 1: Membuat layanan Mock API
 
-### Soal 1
+### Soal 2
 
-- Tambahkan nama panggilan Anda pada title app sebagai identitas hasil pekerjaan Anda.
-- Gantilah warna tema aplikasi sesuai kesukaan Anda. 
-- Capture hasil aplikasi Anda, lalu masukkan ke laporan di README dan lakukan commit hasil jawaban Soal 1 dengan pesan "W14: Jawaban Soal 1"
-![P1.png](assets/JS14/praktikum1/P1.png)
+- Tambahkan field baru dalam JSON maupun POST ke Wiremock!
+![pizza.png](assets/JS14/praktikum2/pizza.png)
+![pizza_detail.png](assets/JS14/praktikum2/pizza_detail.png)
+
+- Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 2 dengan pesan "W14: Jawaban Soal 2"
+![praktikum2.gif](assets/JS14/praktikum2/praktikum2.gif)
